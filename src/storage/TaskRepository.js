@@ -1,30 +1,38 @@
-const KEY = 'tasks:v1';
+// src/storage/TaskRepository.js
+import { IDB } from './idb.js';
+
+let opened = false;
+async function ensure() {
+  if (!opened) { await IDB.open(); opened = true; }
+}
 
 export const TaskRepository = {
   async list() {
-    return JSON.parse(localStorage.getItem(KEY) || '[]');
+    await ensure();
+    return await IDB.getAll();
   },
+
   async saveAll(tasks) {
-    localStorage.setItem(KEY, JSON.stringify(tasks));
+    await ensure();
+    await IDB.clearTasks();
+    for (const t of tasks) await IDB.putTask(t);
+    await IDB.backupNow({ op: 'saveAll', count: tasks.length });
   },
+
   async add(task) {
-    const all = await this.list();
-    all.push(task);
-    await this.saveAll(all);
+    await ensure();
+    await IDB.putTask(task);
     return task;
   },
+
   async update(updated) {
-    const all = await this.list();
-    const idx = all.findIndex(x => x.id === updated.id);
-    if (idx !== -1) {
-      all[idx] = updated;
-      await this.saveAll(all);
-    }
+    await ensure();
+    await IDB.putTask(updated); // put оновлює за id
     return updated;
   },
+
   async remove(id) {
-    const all = await this.list();
-    const next = all.filter(x => x.id !== id);
-    await this.saveAll(next);
+    await ensure();
+    await IDB.delTask(id);
   }
 };
