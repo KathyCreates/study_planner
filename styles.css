@@ -1,0 +1,472 @@
+:root {
+  --bg: #ffffff;
+  --fg: #0f172a;
+  --muted: #6b7280;
+  --accent: #7040F4;
+  --accent-weak: #ede7ff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font: 16px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Arial;
+  color: var(--fg);
+  background: var(--bg);
+}
+
+/* ---------- Header ---------- */
+.app-header {
+  position: sticky;
+  top: 0;
+  background: #f3efff;
+  z-index: 500;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 22px;
+}
+
+/* ---------- Container ---------- */
+#app {
+  max-width: 1200px;
+  margin: 16px auto;
+  padding: 0 16px;
+}
+
+/* ---------- Cards / layout blocks ---------- */
+.card {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.card .row+.row {
+  margin-top: 12px;
+}
+
+/* ---------- Form/Grid helpers ---------- */
+.row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.row>* {
+  flex: 1 1 220px;
+}
+
+input[type="text"],
+input[type="date"],
+select,
+button,
+textarea {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+/* ---------- Buttons ---------- */
+button {
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+  transition: filter .15s ease, transform .05s ease;
+}
+
+button:hover {
+  filter: brightness(0.95);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button.secondary {
+  background: #e5e7eb;
+  color: #111827;
+}
+
+button.danger {
+  background: #ef4444;
+}
+
+/* Блок дій форми (додати/очистити/скасувати) */
+.form-actions {
+  margin-top: 16px;
+  gap: 12px;
+}
+
+.form-actions.center {
+  justify-content: center;
+}
+
+.form-actions.right {
+  justify-content: flex-end;
+}
+
+/* ---------- Filters / badges ---------- */
+.filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  background: var(--accent-weak);
+  color: #4b2bb5;
+  /* темний фіолетовий текст */
+}
+
+/* Лічильник (count) у фіолетовій гамі + легка анімація */
+.badge#count {
+  background: linear-gradient(135deg, #ede7ff, #e9ddff);
+  color: #4b2bb5;
+  border: 1px solid #d8c8ff;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 999px;
+  box-shadow: 0 2px 6px rgba(112, 64, 244, .18);
+  letter-spacing: .2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge#count.bump {
+  animation: bump .25s ease;
+}
+
+@keyframes bump {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.08);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.muted {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 360px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width:700px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.left-col {
+  position: sticky;
+  top: 70px;
+  z-index: 20;
+}
+
+.right-col {
+  min-width: 0;
+}
+
+.list {
+  display: grid;
+  gap: 8px;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-inline: 20px;
+  padding-block: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fafafa;
+  transition: box-shadow .15s ease, transform .05s ease
+}
+
+.item .grow {
+  flex: 1;
+}
+
+.item.done {
+  opacity: .75;
+  text-decoration: none;
+  filter: saturate(.8) brightness(.98);
+}
+
+/* Текстові кольори всередині задач (за замовчуванням) */
+.item .title {
+  font-size: 16px;
+  line-height: 1.35;
+  color: var(--item-fg, var(--fg));
+  font-weight: 600;
+}
+
+.item .meta,
+.item .muted {
+  color: var(--item-muted, var(--muted));
+}
+
+/* робимо дедлайн з нового рядка, інше залишається в один рядок */
+.item .meta .deadline {
+  display: block;
+  /* ← перенос на новий рядок */
+  margin-top: 2px;
+  /* трохи повітря */
+  font-size: 12px;
+  /* можеш змінити */
+  opacity: .9;
+  /* м’якший тон */
+}
+
+/* прострочені (незавершені) — червоний із м’яким сяйвом */
+.item.overdue .meta .deadline {
+  color: #b91c1c;
+  text-shadow: 0 0 6px rgba(239, 68, 68, .45), 0 0 1px rgba(239, 68, 68, .8);
+  font-weight: 700;
+}
+
+/* можна ще трохи підкреслити всю картку */
+.item.overdue {
+  border-color: #fecaca;
+  /* м’який червоний бордер */
+  box-shadow: 0 2px 12px rgba(239, 68, 68, .08);
+}
+
+/* ---------- Пріоритети з градієнтами ---------- */
+/* Легка (low): FBE3C7 → FBF1E5 */
+.item.pr-low {
+  background: linear-gradient(180deg, #FBE3C7, #FBF1E5);
+  border-color: #f3caa6;
+  --item-fg: #6f3b00;
+  --item-muted: #8b5a2b;
+}
+
+/* Середня (medium): C9D8FF → E1EAFB */
+.item.pr-medium {
+  background: linear-gradient(180deg, #C9D8FF, #E1EAFB);
+  border-color: #b8c8ff;
+  --item-fg: #0f2566;
+  --item-muted: #344a84;
+}
+
+/* Важка (high): CBC5F5 → E4E0FB */
+.item.pr-high {
+  background: linear-gradient(180deg, #CBC5F5, #E4E0FB);
+  border-color: #bfb7f2;
+  --item-fg: #3a2c8d;
+  --item-muted: #5645a8;
+}
+
+.item:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, .06)
+}
+
+
+
+/* Кнопка редагування з градієнтом за пріоритетом */
+.btn-edit {
+  border: 1px solid transparent;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: filter .15s ease, transform .05s ease, box-shadow .15s ease;
+}
+
+/* Легка */
+.item.pr-low .btn-edit {
+  background: linear-gradient(to bottom, #FBE3C7, #FBF1E5);
+  border-color: #f3caa6;
+  color: #6f3b00;
+}
+
+/* Середня */
+.item.pr-medium .btn-edit {
+  background: linear-gradient(to bottom, #C9D8FF, #E1EAFB);
+  border-color: #b8c8ff;
+  color: #0f2566;
+}
+
+/* Важка */
+.item.pr-high .btn-edit {
+  background: linear-gradient(to bottom, #CBC5F5, #E4E0FB);
+  border-color: #bfb7f2;
+  color: #3a2c8d;
+}
+
+/* Hover/active/focus */
+.btn-edit:hover {
+  filter: brightness(.98);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+.btn-edit:active {
+  transform: translateY(1px);
+}
+
+.btn-edit:focus {
+  outline: 2px solid rgba(112, 64, 244, .35);
+  outline-offset: 2px;
+}
+
+/* Контейнер великого чекбокса */
+.check-lg {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* Ховаємо нативний, але лишаємо доступним */
+.check-lg input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+  pointer-events: none;
+}
+
+/* Коробочка 22x22, з центруванням контенту */
+.check-lg .box {
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
+  border: 2px solid #c7cbe0;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  /* центр галочки */
+  position: relative;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .05);
+  transition: border-color .15s ease, background .15s ease, box-shadow .15s ease, transform .05s ease;
+}
+
+/* Підсвітка бордерів за пріоритетом */
+.item.pr-low .check-lg .box {
+  border-color: #c8a985;
+}
+
+.item.pr-medium .check-lg .box {
+  border-color: #9fb0ff;
+}
+
+/* ← виправлено селектор */
+.item.pr-high .check-lg .box {
+  border-color: #b8b1f0;
+}
+
+/* Стан checked: заливаємо фоном і показуємо галочку */
+.check-lg input[type="checkbox"]:checked+.box {
+  background: var(--accent);
+  /* #7040F4 */
+  border-color: var(--accent);
+  box-shadow: 0 2px 10px rgba(112, 64, 244, .25);
+}
+
+/* Галочка — РІВНО по центру (без left/top/absolute) */
+.check-lg input[type="checkbox"]:checked+.box::after {
+  content: "";
+  width: 8px;
+  height: 12px;
+  border: 3px solid #fff;
+  border-left: none;
+  border-top: none;
+  transform: translateY(-1px) rotate(45deg);
+}
+
+/* Hover/active/focus */
+.check-lg:hover .box {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .08);
+}
+
+.check-lg:active .box {
+  transform: translateY(1px);
+}
+
+.check-lg input[type="checkbox"]:focus+.box {
+  outline: 2px solid rgba(112, 64, 244, .35);
+  outline-offset: 2px;
+}
+
+/* ---------- Modal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, .5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal {
+  background: #fff;
+  border-radius: 12px;
+  width: min(560px, 92vw);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .25);
+  overflow: hidden;
+  transform: translateY(8px);
+  opacity: 0;
+  transition: .15s ease;
+}
+
+.modal.show {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+}
+
+.modal-title {
+  font-weight: 600;
+}
+
+.modal-close {
+  background: transparent;
+  color: #111827;
+  border: none;
+  font-size: 18px;
+  padding: 6px 8px;
+  cursor: pointer;
+}
+
+.modal-body {
+  padding: 16px;
+}
